@@ -55,7 +55,6 @@ import * as gettingStartedPanel from 'app/plugins/panel/gettingstarted/module';
 import * as histogramPanel from 'app/plugins/panel/histogram/module';
 import * as livePanel from 'app/plugins/panel/live/module';
 import * as logsPanel from 'app/plugins/panel/logs/module';
-import * as newsPanel from 'app/plugins/panel/news/module';
 import * as nodeGraph from 'app/plugins/panel/nodeGraph/module';
 import * as pieChartPanel from 'app/plugins/panel/piechart/module';
 import * as statPanel from 'app/plugins/panel/stat/module';
@@ -130,7 +129,6 @@ const builtInPlugins: any = {
   'app/plugins/panel/heatmap/module': config.featureToggles.useLegacyHeatmapPanel ? heatmapPanelOLD : heatmapPanel,
   'app/plugins/panel/table/module': tablePanel,
   'app/plugins/panel/table-old/module': tableOldPanel,
-  'app/plugins/panel/news/module': newsPanel,
   'app/plugins/panel/live/module': livePanel,
   'app/plugins/panel/stat/module': statPanel,
   'app/plugins/panel/debug/module': debugPanel,
