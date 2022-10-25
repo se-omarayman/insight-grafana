@@ -34,6 +34,7 @@ export interface ThemeColorsBase<TColor> {
     primary: string;
     /** Cards and elements that need to stand out on the primary background */
     secondary: string;
+    intalioPrimary: string;
   };
 
   border: {
@@ -137,6 +138,7 @@ class DarkColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
     canvas: palette.gray05,
     primary: palette.gray10,
     secondary: palette.gray15,
+    intalioPrimary: palette.intalioGreen,
   };
 
   action = {
@@ -165,7 +167,7 @@ class LightColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
   blackBase = '36, 41, 46';
 
   primary = {
-    main: palette.blueLightMain,
+    main: palette.intalioGreen,
     border: palette.blueLightText,
     text: palette.blueLightText,
   };
@@ -217,6 +219,7 @@ class LightColors implements ThemeColorsBase<Partial<ThemeRichColor>> {
     canvas: palette.gray90,
     primary: palette.white,
     secondary: palette.gray100,
+    intalioPrimary: palette.intalioGreen,
   };
 
   action = {

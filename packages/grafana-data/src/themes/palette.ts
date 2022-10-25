@@ -41,4 +41,7 @@ export const palette = {
   greenLightText: '#0A764E',
   orangeLightMain: '#FAD34A',
   orangeLightText: '#8A6C00',
+
+  // start Intalio colors
+  intalioGreen: '#3DD2AC',
 };

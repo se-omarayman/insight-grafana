@@ -195,7 +195,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
     label: 'sidemenu',
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: theme.colors.background.primary,
+    backgroundColor: theme.colors.background.intalioPrimary,
     zIndex: theme.zIndex.sidemenu,
     padding: `${theme.spacing(1)} 0`,
     position: 'relative',
