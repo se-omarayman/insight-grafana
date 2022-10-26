@@ -11,7 +11,7 @@ export const PubdashFooter = function () {
     <div className={styles.footer}>
       <span className={styles.logoText}>
         <a href="https://grafana.com/" target="_blank" rel="noreferrer noopener">
-          powered by Grafana <img className={styles.logoImg} alt="" src="public/img/grafana_icon.svg"></img>
+          powered by Insight <img className={styles.logoImg} alt="" src="public/img/insight-logo.png"></img>
         </a>
       </span>
     </div>
