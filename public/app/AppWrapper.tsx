@@ -35,7 +35,7 @@ interface AppWrapperState {
 let bodyRenderHooks: ComponentType[] = [];
 let pageBanners: ComponentType[] = [];
 const urlParams = new URLSearchParams(window.location.search);
-
+// c
 export function addBodyRenderHook(fn: ComponentType) {
   bodyRenderHooks.push(fn);
 }
