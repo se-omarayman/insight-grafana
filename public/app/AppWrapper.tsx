@@ -35,9 +35,6 @@ interface AppWrapperState {
 let bodyRenderHooks: ComponentType[] = [];
 let pageBanners: ComponentType[] = [];
 const urlParams = new URLSearchParams(window.location.search);
-// if (urlParams.has('nav')) {
-//     isNav = urlParams.get('nav')
-// }
 
 export function addBodyRenderHook(fn: ComponentType) {
   bodyRenderHooks.push(fn);
