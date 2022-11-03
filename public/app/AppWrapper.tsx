@@ -34,6 +34,10 @@ interface AppWrapperState {
 /** Used by enterprise */
 let bodyRenderHooks: ComponentType[] = [];
 let pageBanners: ComponentType[] = [];
+const urlParams = new URLSearchParams(window.location.search);
+// if (urlParams.has('nav')) {
+//     isNav = urlParams.get('nav')
+// }
 
 export function addBodyRenderHook(fn: ComponentType) {
   bodyRenderHooks.push(fn);
@@ -83,11 +87,18 @@ export class AppWrapper extends React.Component<AppWrapperProps, AppWrapperState
   }
 
   renderNavBar() {
-    if (config.isPublicDashboardView || !this.state.ready || config.featureToggles.topnav) {
+    if (
+      !urlParams.has('nav') ||
+      urlParams.get('nav') === '0' ||
+      config.isPublicDashboardView ||
+      !this.state.ready ||
+      config.featureToggles.topnav
+    ) {
       return null;
     }
 
     return <NavBar />;
+    // return null;
   }
 
   commandPaletteEnabled() {
