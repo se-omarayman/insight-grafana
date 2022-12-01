@@ -121,8 +121,11 @@ export class TablePanel extends Component<Props> {
 
   render() {
     const { data, height, width, options, fieldConfig, id } = this.props;
+    console.log('omar: data: ', data);
+    console.log('omar: frames: ', data.series);
 
     const frames = data.series;
+    console.log('omar: length: ', frames.length);
     const count = frames?.length;
     const hasFields = frames[0]?.fields.length;
 

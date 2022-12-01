@@ -1,4 +1,4 @@
-import React, { CSSProperties, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { CSSProperties, HTMLProps, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Cell,
   TableState,
@@ -6,6 +6,7 @@ import {
   useFilters,
   usePagination,
   useResizeColumns,
+  useRowSelect,
   useSortBy,
   useTable,
 } from 'react-table';
@@ -212,7 +213,51 @@ export const Table = memo((props: Props) => {
     gotoPage,
     setPageSize,
     pageOptions,
-  } = useTable(options, useFilters, useSortBy, usePagination, useAbsoluteLayout, useResizeColumns);
+  } = useTable(
+    options,
+    useFilters,
+    useSortBy,
+    usePagination,
+    useAbsoluteLayout,
+    useResizeColumns,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              {/* {console.log(getToggleAllRowsSelectedProps())} */}
+              <IndeterminateCheckbox
+                {...{
+                  checked: getToggleAllRowsSelectedProps().checked,
+                  indeterminate: getToggleAllRowsSelectedProps().indeterminate,
+                  onChange: getToggleAllRowsSelectedProps().onChange,
+                }}
+              />
+              <h1>hereee</h1>
+            </div>
+          ),
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+          Cell: ({ row }) => (
+            <div>
+              {/* <IndeterminateCheckbox   {...{
+                // checked: row.getIsSelected(),
+                // indeterminate: row.getIsSomeSelected(),
+                // onChange: row.getToggleSelectedHandler(),
+              }} /> */}
+              <h2>asdfasdfasdf</h2>
+            </div>
+          ),
+        },
+        ...columns,
+      ]);
+    }
+  );
 
   /*
     Footer value calculation is being moved in the Table component and the footerValues prop will be deprecated.
@@ -283,9 +328,26 @@ export const Table = memo((props: Props) => {
     }
   });
 
+  function IndeterminateCheckbox({
+    indeterminate,
+    className = '',
+    ...rest
+  }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+    const ref = React.useRef<HTMLInputElement>(null!);
+
+    React.useEffect(() => {
+      if (typeof indeterminate === 'boolean') {
+        ref.current.indeterminate = !rest.checked && indeterminate;
+      }
+    }, [ref, indeterminate, rest.checked]);
+
+    return <input type="checkbox" ref={ref} className={className + ' cursor-pointer'} {...rest} />;
+  }
+
   const RenderRow = React.useCallback(
     ({ index: rowIndex, style }: { index: number; style: CSSProperties }) => {
       let row = rows[rowIndex];
+      console.log('row is: ', row);
       if (enablePagination) {
         row = page[rowIndex];
       }
