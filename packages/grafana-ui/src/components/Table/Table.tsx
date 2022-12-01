@@ -223,7 +223,7 @@ export const Table = memo((props: Props) => {
     useRowSelect,
     (hooks) => {
       hooks.visibleColumns.push((columns) => [
-        // Let's make a column for selection
+        // Let's make a column for selection asdfasdf
         {
           id: 'selection',
           // The header can use the table's getToggleAllRowsSelectedProps method
