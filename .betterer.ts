@@ -32,7 +32,7 @@ function countEslintErrors() {
         const linterOptions = (await cli.calculateConfigForFile(filePath)) as Linter.Config;
 
         const rules: Partial<Linter.RulesRecord> = {
-          '@typescript-eslint/no-explicit-any': 'error',
+          //   '@typescript-eslint/no-explicit-any': 'error',
         };
 
         const isTestFile =

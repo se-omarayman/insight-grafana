@@ -1,7 +1,12 @@
-import React, { CSSProperties, HTMLProps, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { CSSProperties, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Cell,
+  //   Column,
+  HeaderProps,
+  Hooks,
+  //   TableInstance,
   TableState,
+  TableToggleCommonProps,
   useAbsoluteLayout,
   useFilters,
   usePagination,
@@ -20,6 +25,7 @@ import { Pagination } from '../Pagination/Pagination';
 
 import { FooterRow } from './FooterRow';
 import { HeaderRow } from './HeaderRow';
+import IndeterminateCheckbox from './IndeterminateCheckbox';
 import { TableCell } from './TableCell';
 import { getTableStyles } from './styles';
 import {
@@ -173,6 +179,7 @@ export const Table = memo((props: Props) => {
     // as we only use this to fake the length of our data set for react-table we need to make sure we always return an array
     // filled with values at each index otherwise we'll end up trying to call accessRow for null|undefined value in
     // https://github.com/tannerlinsley/react-table/blob/7be2fc9d8b5e223fc998af88865ae86a88792fdb/src/hooks/useTable.js#L585
+    console.log('memoizedData ', data);
     return Array(data.length).fill(0);
   }, [data]);
 
@@ -181,6 +188,7 @@ export const Table = memo((props: Props) => {
     () => getColumns(data, width, columnMinWidth, footerItems),
     [data, width, columnMinWidth, footerItems]
   );
+  console.log('memoizedColumns', memoizedColumns);
 
   // Internal react table state reducer
   const stateReducer = useTableStateReducer(props);
@@ -221,37 +229,21 @@ export const Table = memo((props: Props) => {
     useAbsoluteLayout,
     useResizeColumns,
     useRowSelect,
-    (hooks) => {
+    (hooks: Hooks) => {
       hooks.visibleColumns.push((columns) => [
-        // Let's make a column for selection asdfasdf
+        // Let's make a column for selection
         {
           id: 'selection',
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <div>
-              {/* {console.log(getToggleAllRowsSelectedProps())} */}
-              <IndeterminateCheckbox
-                {...{
-                  checked: getToggleAllRowsSelectedProps().checked,
-                  indeterminate: getToggleAllRowsSelectedProps().indeterminate,
-                  onChange: getToggleAllRowsSelectedProps().onChange,
-                }}
-              />
-              <h1>hereee</h1>
-            </div>
+          Header: ({ getToggleAllRowsSelectedProps }: HeaderProps<{}>) => (
+            <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
           ),
           // The cell can use the individual row's getToggleRowSelectedProps method
           // to the render a checkbox
-          Cell: ({ row }) => (
-            <div>
-              {/* <IndeterminateCheckbox   {...{
-                // checked: row.getIsSelected(),
-                // indeterminate: row.getIsSomeSelected(),
-                // onChange: row.getToggleSelectedHandler(),
-              }} /> */}
-              <h2>asdfasdfasdf</h2>
-            </div>
+
+          Cell: ({ row }: { row: { getToggleRowSelectedProps: () => TableToggleCommonProps } }) => (
+            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
           ),
         },
         ...columns,
@@ -328,26 +320,9 @@ export const Table = memo((props: Props) => {
     }
   });
 
-  function IndeterminateCheckbox({
-    indeterminate,
-    className = '',
-    ...rest
-  }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
-    const ref = React.useRef<HTMLInputElement>(null!);
-
-    React.useEffect(() => {
-      if (typeof indeterminate === 'boolean') {
-        ref.current.indeterminate = !rest.checked && indeterminate;
-      }
-    }, [ref, indeterminate, rest.checked]);
-
-    return <input type="checkbox" ref={ref} className={className + ' cursor-pointer'} {...rest} />;
-  }
-
   const RenderRow = React.useCallback(
     ({ index: rowIndex, style }: { index: number; style: CSSProperties }) => {
       let row = rows[rowIndex];
-      console.log('row is: ', row);
       if (enablePagination) {
         row = page[rowIndex];
       }
