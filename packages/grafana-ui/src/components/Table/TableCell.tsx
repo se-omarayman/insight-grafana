@@ -17,9 +17,10 @@ export const TableCell: FC<Props> = ({ cell, tableStyles, onCellFilterAdded, col
   const cellProps = cell.getCellProps();
   const field = (cell.column as unknown as GrafanaTableColumn).field;
 
-  if (!field?.display) {
-    return null;
-  }
+  //make checkboxes work
+  //   if (!field?.display) {
+  //     return null;
+  //   }
 
   if (cellProps.style) {
     cellProps.style.minWidth = cellProps.style.width;

@@ -1,16 +1,23 @@
 import React, { CSSProperties, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Cell,
+  //   Column,
+  HeaderProps,
+  Hooks,
+  //   TableInstance,
   TableState,
+  TableToggleCommonProps,
   useAbsoluteLayout,
   useFilters,
   usePagination,
   useResizeColumns,
+  useRowSelect,
   useSortBy,
   useTable,
 } from 'react-table';
 import { FixedSizeList } from 'react-window';
 
+// import { OnChangeFn } from 'slate-react';
 import { DataFrame, getFieldDisplayName, Field } from '@grafana/data';
 
 import { useStyles2, useTheme2 } from '../../themes';
@@ -19,6 +26,7 @@ import { Pagination } from '../Pagination/Pagination';
 
 import { FooterRow } from './FooterRow';
 import { HeaderRow } from './HeaderRow';
+import IndeterminateCheckbox from './IndeterminateCheckbox';
 import { TableCell } from './TableCell';
 import { getTableStyles } from './styles';
 import {
@@ -51,9 +59,11 @@ export interface Props {
   footerOptions?: TableFooterCalc;
   footerValues?: FooterItem[];
   enablePagination?: boolean;
+  enableRowSelection?: boolean;
+  onRowSelectionChange?: any;
 }
 
-function useTableStateReducer({ onColumnResize, onSortByChange, data }: Props) {
+function useTableStateReducer({ onColumnResize, onSortByChange, onRowSelectionChange, data }: Props) {
   return useCallback(
     (newState: TableState, action: { type: string }) => {
       switch (action.type) {
@@ -89,13 +99,15 @@ function useTableStateReducer({ onColumnResize, onSortByChange, data }: Props) {
             }
 
             onSortByChange(sortByFields);
+            onRowSelectionChange();
           }
           break;
       }
+      console.log('newStateee is: ', newState);
 
       return newState;
     },
-    [data, onColumnResize, onSortByChange]
+    [data, onColumnResize, onSortByChange, onRowSelectionChange]
   );
 }
 
@@ -113,6 +125,8 @@ function getInitialState(initialSortBy: Props['initialSortBy'], columns: Grafana
       }
     }
   }
+
+  console.log('staet is ', state);
 
   return state;
 }
@@ -172,6 +186,7 @@ export const Table = memo((props: Props) => {
     // as we only use this to fake the length of our data set for react-table we need to make sure we always return an array
     // filled with values at each index otherwise we'll end up trying to call accessRow for null|undefined value in
     // https://github.com/tannerlinsley/react-table/blob/7be2fc9d8b5e223fc998af88865ae86a88792fdb/src/hooks/useTable.js#L585
+    console.log('memoizedData ', data);
     return Array(data.length).fill(0);
   }, [data]);
 
@@ -180,6 +195,7 @@ export const Table = memo((props: Props) => {
     () => getColumns(data, width, columnMinWidth, footerItems),
     [data, width, columnMinWidth, footerItems]
   );
+  console.log('memoizedColumns', memoizedColumns);
 
   // Internal react table state reducer
   const stateReducer = useTableStateReducer(props);
@@ -212,8 +228,68 @@ export const Table = memo((props: Props) => {
     gotoPage,
     setPageSize,
     pageOptions,
-  } = useTable(options, useFilters, useSortBy, usePagination, useAbsoluteLayout, useResizeColumns);
+  } = useTable(
+    options,
+    useFilters,
+    useSortBy,
+    usePagination,
+    useAbsoluteLayout,
+    useResizeColumns,
+    useRowSelect,
+    (hooks: Hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        // Let's make a column for selection
+        {
+          id: 'selection',
+          // The header can use the table's getToggleAllRowsSelectedProps method
+          // to render a checkbox
+          Header: ({ getToggleAllRowsSelectedProps, selectedFlatRows }: HeaderProps<{}>) => {
+            console.log('selected falt rows', selectedFlatRows);
 
+            if (!sessionStorage.getItem('selectedRows')) {
+              let rowNames = selectedFlatRows.map((row) => row.cells[1].value);
+              sessionStorage.setItem('selectedRows', JSON.stringify(rowNames));
+            } else {
+              sessionStorage.removeItem('selectedRows');
+
+              let rowNames = selectedFlatRows.map((row) => row.cells[1].value);
+              sessionStorage.setItem('selectedRows', JSON.stringify(rowNames));
+            }
+            return (
+              <div>
+                <IndeterminateCheckbox
+                  {...{
+                    onChange: getToggleAllRowsSelectedProps().onChange,
+                    checked: getToggleAllRowsSelectedProps().checked,
+                    indeterminate: getToggleAllRowsSelectedProps().indeterminate,
+                  }}
+                />
+              </div>
+            );
+          },
+          // The cell can use the individual row's getToggleRowSelectedProps method
+          // to the render a checkbox
+
+          Cell: ({ row }: { row: { getToggleRowSelectedProps: () => TableToggleCommonProps } }) => {
+            // const onChange = (e: any) => {
+            //   row.getToggleRowSelectedProps().onChange?.(e);
+            //   console.log('selectred flat rows', state);
+            // };
+            return (
+              <IndeterminateCheckbox
+                {...{
+                  checked: row.getToggleRowSelectedProps().checked,
+                  indeterminate: row.getToggleRowSelectedProps().indeterminate,
+                  onChange: row.getToggleRowSelectedProps().onChange,
+                }}
+              />
+            );
+          },
+        },
+        ...columns,
+      ]);
+    }
+  );
   /*
     Footer value calculation is being moved in the Table component and the footerValues prop will be deprecated.
     The footerValues prop is still used in the Table component for backwards compatibility. Adding the
@@ -392,5 +468,7 @@ export const Table = memo((props: Props) => {
     </div>
   );
 });
+
+console.log(Table);
 
 Table.displayName = 'Table';
