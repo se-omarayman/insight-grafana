@@ -247,13 +247,13 @@ export const Table = memo((props: Props) => {
             console.log('selected falt rows', selectedFlatRows);
 
             if (!sessionStorage.getItem('selectedRows')) {
-              let rowNames = selectedFlatRows.map((row) => row.cells[1].value);
-              sessionStorage.setItem('selectedRows', JSON.stringify(rowNames));
+              let empId = selectedFlatRows.map((row) => row.cells[14].value);
+              sessionStorage.setItem('selectedRows', JSON.stringify(empId));
             } else {
               sessionStorage.removeItem('selectedRows');
 
-              let rowNames = selectedFlatRows.map((row) => row.cells[1].value);
-              sessionStorage.setItem('selectedRows', JSON.stringify(rowNames));
+              let empId = selectedFlatRows.map((row) => row.cells[14].value);
+              sessionStorage.setItem('selectedRows', JSON.stringify(empId));
             }
             return (
               <div>
