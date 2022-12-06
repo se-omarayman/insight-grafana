@@ -30,7 +30,6 @@ const IndeterminateCheckbox = forwardRef<HTMLInputElement, Props>(
   ({ indeterminate, ...rest }, ref: React.Ref<HTMLInputElement>) => {
     const defaultRef = React.useRef(null);
     const combinedRef = useCombinedRefs(ref, defaultRef);
-    console.log('rest is', rest);
 
     useEffect(() => {
       if (combinedRef?.current) {

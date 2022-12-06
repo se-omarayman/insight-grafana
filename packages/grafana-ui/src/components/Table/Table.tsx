@@ -103,7 +103,6 @@ function useTableStateReducer({ onColumnResize, onSortByChange, onRowSelectionCh
           }
           break;
       }
-      console.log('newStateee is: ', newState);
 
       return newState;
     },
@@ -186,7 +185,6 @@ export const Table = memo((props: Props) => {
     // as we only use this to fake the length of our data set for react-table we need to make sure we always return an array
     // filled with values at each index otherwise we'll end up trying to call accessRow for null|undefined value in
     // https://github.com/tannerlinsley/react-table/blob/7be2fc9d8b5e223fc998af88865ae86a88792fdb/src/hooks/useTable.js#L585
-    console.log('memoizedData ', data);
     return Array(data.length).fill(0);
   }, [data]);
 
@@ -195,7 +193,6 @@ export const Table = memo((props: Props) => {
     () => getColumns(data, width, columnMinWidth, footerItems),
     [data, width, columnMinWidth, footerItems]
   );
-  console.log('memoizedColumns', memoizedColumns);
 
   // Internal react table state reducer
   const stateReducer = useTableStateReducer(props);
