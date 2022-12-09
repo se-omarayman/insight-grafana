@@ -37,9 +37,14 @@ const IndeterminateCheckbox = forwardRef<HTMLInputElement, Props>(
       }
     }, [combinedRef, indeterminate]);
 
+    const styles = {
+      marginLeft: 5,
+      marginTop: 12,
+    };
+
     return (
       <React.Fragment>
-        <input type="checkbox" ref={combinedRef} {...rest} />
+        <input style={styles} type="checkbox" ref={combinedRef} {...rest} />
       </React.Fragment>
     );
   }
