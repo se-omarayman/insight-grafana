@@ -238,31 +238,22 @@ export const Table = memo((props: Props) => {
         // Let's make a column for selection
         {
           id: 'selection',
+          width: 20,
           // The header can use the table's getToggleAllRowsSelectedProps method
           // to render a checkbox
           Header: ({ getToggleAllRowsSelectedProps, selectedFlatRows }: HeaderProps<{}>) => {
             console.log('selected falt rows', selectedFlatRows);
 
             if (!sessionStorage.getItem('selectedRows')) {
-              let empId = selectedFlatRows.map((row) => row.cells[14].value);
+              let empId = selectedFlatRows.map((row) => row.cells[21].value);
               sessionStorage.setItem('selectedRows', JSON.stringify(empId));
             } else {
               sessionStorage.removeItem('selectedRows');
 
-              let empId = selectedFlatRows.map((row) => row.cells[14].value);
+              let empId = selectedFlatRows.map((row) => row.cells[21].value);
               sessionStorage.setItem('selectedRows', JSON.stringify(empId));
             }
-            return (
-              <div>
-                <IndeterminateCheckbox
-                  {...{
-                    onChange: getToggleAllRowsSelectedProps().onChange,
-                    checked: getToggleAllRowsSelectedProps().checked,
-                    indeterminate: getToggleAllRowsSelectedProps().indeterminate,
-                  }}
-                />
-              </div>
-            );
+            return <div></div>;
           },
           // The cell can use the individual row's getToggleRowSelectedProps method
           // to the render a checkbox
@@ -272,6 +263,7 @@ export const Table = memo((props: Props) => {
             //   row.getToggleRowSelectedProps().onChange?.(e);
             //   console.log('selectred flat rows', state);
             // };
+            // width: 20
             return (
               <IndeterminateCheckbox
                 {...{
