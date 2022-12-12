@@ -23,9 +23,12 @@
 
     [[ if eq .Theme "light" ]]
     <link rel="stylesheet" href="[[.ContentDeliveryURL]]public/build/<%= htmlWebpackPlugin.files.cssChunks.light %>" />
+    <script href="https://cdn.form.io/formiojs/formio.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.form.io/formiojs/formio.full.min.css" />
     [[ else ]]
     <link rel="stylesheet" href="[[.ContentDeliveryURL]]public/build/<%= htmlWebpackPlugin.files.cssChunks.dark %>" />
     [[ end ]]
+
 
     <script nonce="[[.Nonce]]">
       performance.mark('frontend_boot_css_time_seconds');

@@ -245,12 +245,16 @@ export const Table = memo((props: Props) => {
             console.log('selected falt rows', selectedFlatRows);
 
             if (!sessionStorage.getItem('selectedRows')) {
-              let empId = selectedFlatRows.map((row) => row.cells[21].value);
+              let empId = selectedFlatRows.map((row) => {
+                return row.cells.find((cell) => cell.column.Header === '_id')?.value;
+              });
               sessionStorage.setItem('selectedRows', JSON.stringify(empId));
             } else {
               sessionStorage.removeItem('selectedRows');
 
-              let empId = selectedFlatRows.map((row) => row.cells[21].value);
+              let empId = selectedFlatRows.map((row) => {
+                return row.cells.find((cell) => cell.column.Header === '_id')?.value;
+              });
               sessionStorage.setItem('selectedRows', JSON.stringify(empId));
             }
             return <div></div>;
